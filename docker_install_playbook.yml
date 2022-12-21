@@ -1,0 +1,71 @@
+---
+- hosts: all
+  become: true
+  remote_user: ubuntu
+  become_method: sudo
+  vars: 
+    ansible_ssh_private_key_file: ~/GreenKeys/dev_jese_chavez_20222012.pem
+  tasks:
+
+  - name: Update and Upgrade
+    apt: update_cache=yes upgrade=yes cache_valid_time=3600 force_apt_get=yes
+
+  - name: Update and install ca-certificates
+    apt:
+      force_apt_get: yes
+      update_cache: yes
+      name: ca-certificates
+
+  - name: Update and install curl
+    apt:
+      force_apt_get: yes
+      update_cache: yes
+      name: curl
+
+  - name: Update and install gnupg
+    apt:
+      force_apt_get: yes
+      update_cache: yes
+      name: gnupg
+
+  - name: Update and install lsb-release
+    apt:
+      force_apt_get: yes
+      update_cache: yes
+      name: lsb-release
+
+  - name: Docker repo and key set up
+    block:
+      - name: Add Docker GPG apt Key
+        apt_key:
+          url: https://download.docker.com/linux/ubuntu/gpg
+          state: present
+
+      - name: Docker Repo
+        apt_repository:
+          repo: deb https://download.docker.com/linux/ubuntu focal stable
+          state: present
+
+  - name: Installing docker-ce
+    apt:
+      force_apt_get: yes
+      update_cache: yes
+      name: docker-ce
+
+  - name: Installing docker-ce-cli 
+    apt:
+      force_apt_get: yes
+      update_cache: yes
+      name: docker-ce-cli 
+
+  - name: Installing containerd.io
+    apt:
+      force_apt_get: yes
+      update_cache: yes
+      name: containerd.io
+
+  - name: Installing docker-compose-plugin
+    apt:
+      force_apt_get: yes
+      update_cache: yes
+      name: docker-compose-plugin
