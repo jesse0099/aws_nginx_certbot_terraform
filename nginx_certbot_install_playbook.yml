@@ -35,6 +35,11 @@
     apt:
       update_cache: yes 
       name: software-properties-common
+  
+  - name: update and install certbot
+    apt:
+      update_cache: yes 
+      name: certbot
 
   - name: update and install python3-certbot-nginx
     apt:
