@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  remote_user: ubuntu
+  vars:
+    ansible_ssh_private_key_file: ~/GreenKeys/dev_jese_chavez_20222012.pem
+  tasks:
+
+  - name: Install and run portainer agent
+    shell: > 
+      docker run -d
+      -p 9001:9001
+      --name portainer_agent
+      --restart=always
+      -v /var/run/docker.sock:/var/run/docker.sock
+      -v /var/lib/docker/volumes:/var/lib/docker/volumes
+      portainer/agent:2.16.2
+
+  

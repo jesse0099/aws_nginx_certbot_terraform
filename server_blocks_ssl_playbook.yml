@@ -65,4 +65,9 @@
   
   - name: Restarts Nginx after requesting SSL cert and auto-renew
     shell: systemctl restart nginx
-  
+    
+  - name: Enable and Start certbot timer
+    systemd:
+      name: certbot.timer
+      state: started
+      enabled: yes
