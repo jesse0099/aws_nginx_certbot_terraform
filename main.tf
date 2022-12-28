@@ -1,5 +1,5 @@
-variable "subnet_id" {
-    type = string
+locals {
+    subnet_id = var.subnet_id
 }
 
 data "aws_subnet" "selected"{
@@ -17,7 +17,6 @@ terraform {
       version = "4.16"
     }
   }
-
   required_version = ">= 1.2.0"
 }
 
