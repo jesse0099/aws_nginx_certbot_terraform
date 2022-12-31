@@ -19,13 +19,13 @@ resource "aws_instance" "dev-ssmseguridad" {
   subnet_id     = local.subnet_id
   tags          = local.ec2_instance_tags
 
-  # provisioner "local-exec" {
-  #   command = "echo '[server]\n ${self.public_ip} \n' > host"
-  # }
+  provisioner "local-exec" {
+    command = "echo '[server]\n ${self.public_ip} \n' > ./Playbooks/host"
+  }
   # # Install nginx and certbot
-  # provisioner "local-exec" {
-  #   command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i host ./nginx_certbot_install_playbook.yml"
-  # }
+  provisioner "local-exec" {
+    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./Playbooks/host ./Playbooks/apt_install_playbook.yml"
+  }
   # # Install docker engine and compose plugin
   # provisioner "local-exec" {
   #   command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i host ./docker_install_playbook.yml"

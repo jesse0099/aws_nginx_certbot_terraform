@@ -1,0 +1,30 @@
+---
+- instance_ssh_key_path: '~/GreenKeys/chris_temp.pem'
+
+- to_certify_domains:
+
+- apt_signing_keys:
+    - 'http://nginx.org/keys/nginx_signing.key'
+    - 'https://download.docker.com/linux/ubuntu/gpg'
+
+- apt_repositories:
+    - 'deb-src http://nginx.org/packages/ubuntu/ xenial nginx'
+    - 'deb http://nginx.org/packages/ubuntu/ xenial nginx'
+    - 'ppa:certbot/certbot'
+    - 'deb https://download.docker.com/linux/ubuntu focal stable'
+
+- apt_packages_names:
+    - 'nginx'
+    - 'software-properties-common'
+    - 'certbot'
+    - 'python3-certbot-nginx'
+
+- forced_apt_get_packages_names:
+    - 'ca-certificates'
+    - 'curl'
+    - 'gnupg'
+    - 'lsb-release'
+    - 'docker-ce'
+    - 'docker-ce-cli'
+    - 'containerd.io'
+    - 'docker-compose-plugin'
