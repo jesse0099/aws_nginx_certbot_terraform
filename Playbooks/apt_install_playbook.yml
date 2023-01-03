@@ -33,7 +33,7 @@
       name: '{{ apt_packages_names }}'
     when: apt_packages_names
 
-  - name: 'Update, Upgrade and install apt packages. (force apt-get)'
+  - name: 'Update and install apt packages. (force apt-get)'
     apt:
       update_cache: true
       force_apt_get: true

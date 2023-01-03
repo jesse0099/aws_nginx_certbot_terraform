@@ -1,19 +1,28 @@
 ---
 - hosts: all
   become: true
-  remote_user: ubuntu
   become_method: sudo
+  remote_user: ubuntu
+  vars_files:
+    - ./variables.yml
   vars: 
-    ansible_ssh_private_key_file: ~/GreenKeys/dev_jese_chavez_20222012.pem
+    ansible_ssh_private_key_file: '{{ instance_ssh_key_path }}'
+    local_files_path: '{{ compose_files_paths.local_files_path }}'
+    remote_files_path: '{{ compose_files_paths.remote_files_path }}'
   tasks:
-  
-  - name: Copy dockerfiles and other necessary files
+  # It should be a set of images located on a container registry.
+  - name: 'Copy dockerfiles and other necessary files.'
     copy:
-      src: ./ssm_seguridad-guard-patrol-web-app
-      dest: /home/ubuntu
+      src: '{{ local_files_path }}'
+      dest: '{{ remote_files_path }}'
 
-  - name: Docker compose up in dettach mode 
-    command: chdir=/home/ubuntu/ssm_seguridad-guard-patrol-web-app/ docker compose up -d
+  - name: 'Creates .env file based on .env.example.'
+    command: cp .env.example .env
+    args: 
+      chdir: "{{ remote_files_path }}/{{ local_files_path | split('/') | last }}"
+      
   
-  - name: Restart Nginx
-    shell: systemctl restart nginx
+  - name: 'Docker compose Up.'
+    command: docker compose up --detach
+    args: 
+      chdir: "{{ remote_files_path }}/{{ local_files_path | split('/') | last }}"

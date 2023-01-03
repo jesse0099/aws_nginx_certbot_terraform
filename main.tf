@@ -22,20 +22,27 @@ resource "aws_instance" "dev-ssmseguridad" {
   provisioner "local-exec" {
     command = "echo '[server]\n ${self.public_ip} \n' > ./Playbooks/host"
   }
-  # # Install nginx and certbot
+  # # Install all necessary packages
   provisioner "local-exec" {
     command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./Playbooks/host ./Playbooks/apt_install_playbook.yml"
   }
-  # # Install docker engine and compose plugin
-  # provisioner "local-exec" {
-  #   command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i host ./docker_install_playbook.yml"
-  # }
-  # # Compose up the apps
-  # provisioner "local-exec" {
-  #   command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i host ./services_up_playbook.yml"
-  # }
-  # # Set up nginx server blocks and certbot ssl support
-  # provisioner "local-exec" {
-  #   command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i host ./server_blocks_ssl_playbook.yml"
-  # }
+  # # Set up nginx server blocks 
+  provisioner "local-exec" {
+    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./Playbooks/host ./Playbooks/nginx_virtual_hosts_playbook.yml"
+  }
+
+  # # Certify domains 
+  provisioner "local-exec" {
+    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./Playbooks/host ./Playbooks/certbot_certify_domains_playbook.yml"
+  }
+
+  # # Execute services
+  provisioner "local-exec" {
+    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./Playbooks/host ./Playbooks/services_up_playbook.yml"
+  }  
+
+  # # Portainer agent
+  provisioner "local-exec" {
+    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./Playbooks/host ./Playbooks/portainer_agent_playbook.yml"
+  }  
 }

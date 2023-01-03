@@ -22,3 +22,6 @@
       name: certbot.timer
       state: started
       enabled: true
+
+  - name: 'Restarts Nginx after requesting certificates.'
+    shell: systemctl restart nginx
