@@ -1,57 +1,48 @@
 locals {
-    subnet_id = var.subnet_id
-}
-
-data "aws_subnet" "selected"{
-    id = var.subnet_id
-}
-
-locals {
-  timestamp = formatdate("YYYYMMDD", timestamp())
-}
-
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "4.16"
-    }
-  }
-  required_version = ">= 1.2.0"
+  ami               = var.ami
+  instance_type     = var.instance_type
+  key_name          = var.key_name
+  subnet_id         = var.subnet_id
+  ec2_instance_tags = var.ec2_instance_tags
+  # timestamp     = formatdate("YYYYMMDD", timestamp())
+  region = var.region
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = local.region
 }
 
 resource "aws_instance" "dev-ssmseguridad" {
-  ami           = "ami-0b0ea68c435eb488d"
-  instance_type = "t2.small"
-  key_name = "dev_jese_chavez_20222012"
-  subnet_id =  data.aws_subnet.selected.id
-  tags = {
-    Name = "dev-ssmseguridad-${local.timestamp}",
-    Description = "ssmseguridad docker-compose exposing instance.",
-    CreatedBy = "jeseabraham.chavez"
-  }
+  ami           = local.ami
+  instance_type = local.instance_type
+  key_name      = local.key_name
+  subnet_id     = local.subnet_id
+  tags          = local.ec2_instance_tags
 
   provisioner "local-exec" {
-    command = "echo '[server]\n ${self.public_ip} \n' > host"
+    command = "echo '[server]\n ${self.public_ip} \n' > ./Playbooks/host"
   }
-  # Install nginx and certbot
+  # # Install all necessary packages
   provisioner "local-exec" {
-    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i host ./nginx_certbot_install_playbook.yml"
+    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./Playbooks/host ./Playbooks/apt_install_playbook.yml"
   }
-  # Install docker engine and compose plugin
+  # # Set up nginx server blocks 
   provisioner "local-exec" {
-    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i host ./docker_install_playbook.yml"
+    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./Playbooks/host ./Playbooks/nginx_virtual_hosts_playbook.yml"
   }
-  # Compose up the apps
+
+  # # Certify domains 
   provisioner "local-exec" {
-    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i host ./services_up_playbook.yml"
+    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./Playbooks/host ./Playbooks/certbot_certify_domains_playbook.yml"
   }
-  # Set up nginx server blocks and certbot ssl support
+
+  # # Execute services
   provisioner "local-exec" {
-    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i host ./server_blocks_ssl_playbook.yml"
-  }
+    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./Playbooks/host ./Playbooks/services_up_playbook.yml"
+  }  
+
+  # # Portainer agent
+  provisioner "local-exec" {
+    command = "sleep 4 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./Playbooks/host ./Playbooks/portainer_agent_playbook.yml"
+  }  
 }

@@ -1,0 +1,58 @@
+---
+- assumed_user: 'ubuntu'
+
+- instance_ssh_key_path: '~/GreenKeys/chris_temp.pem'
+
+- nginx_sites_available_folder_name: 'sites-available'
+
+- nginx_sites_enabled_folder_name: 'sites-enabled'
+
+- compose_files_paths:
+    # Compose local files (Relative paths are allowed)
+    local_files_path: '~/BambooRepos/ssm_seguridad-guard-patrol-web-app'
+    # Uploaded local files home (Provide absolute paths)
+    remote_files_path: '/home/{{ assumed_user }}'
+
+
+- portainer_config:
+    image_name_tag: 'portainer/agent:2.16.2'
+    container_name: 'portainer_agent'
+    reset_agent: false
+    internal_port: 9001
+    exposing_port: 9001
+
+- nginx_domains_config: 
+    devops-test-admin.getbuyside.com:
+      listen_port: 80
+      proxy_pass: 'http://localhost:8080'
+      certbot_email: 'jesechavez009@gmail.com'
+    devops-test-api.getbuyside.com:
+      listen_port: 80
+      proxy_pass: 'http://localhost:8081'
+      certbot_email: 'jesechavez009@gmail.com'
+
+- apt_signing_keys:
+    - 'http://nginx.org/keys/nginx_signing.key'
+    - 'https://download.docker.com/linux/ubuntu/gpg'
+
+- apt_repositories:
+    - 'deb-src http://nginx.org/packages/ubuntu/ xenial nginx'
+    - 'deb http://nginx.org/packages/ubuntu/ xenial nginx'
+    - 'ppa:certbot/certbot'
+    - 'deb https://download.docker.com/linux/ubuntu focal stable'
+
+- apt_packages_names:
+    - 'nginx'
+    - 'software-properties-common'
+    - 'certbot'
+    - 'python3-certbot-nginx'
+
+- forced_apt_get_packages_names:
+    - 'ca-certificates'
+    - 'curl'
+    - 'gnupg'
+    - 'lsb-release'
+    - 'docker-ce'
+    - 'docker-ce-cli'
+    - 'containerd.io'
+    - 'docker-compose-plugin'
