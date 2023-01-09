@@ -35,3 +35,15 @@ variable "region" {
   default     = ""
   description = "aws region to allocate the ec2 instance"
 }
+
+variable "to_execute_playbooks" {
+  type        = map(bool)
+  default     = {}
+  description = <<EOT
+                    Playbooks to execute:
+                      key: Playbook name without extension.
+                           playbooks under ./Playbooks directory only.
+                      value: bool to choose if execute the playbook or not.
+                  EOT 
+}
+
