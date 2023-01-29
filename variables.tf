@@ -54,6 +54,12 @@ variable "ansible_inventory_path" {
   description = "local ansible-inventory path (can be relative)."
 }
 
+variable "white_space" {
+  type        = string
+  default     = " "
+  description = "white space."
+}
+
 
 variable "to_execute_playbooks" {
   type        = list(string)

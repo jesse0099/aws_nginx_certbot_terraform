@@ -8,25 +8,22 @@ locals {
   local_provider_host_key_check = var.local_provider_host_key_check
   ansible_playbooks_path        = var.ansible_playbooks_path
   ansible_inventory_path        = var.ansible_inventory_path
-  # timestamp     = formatdate("YYYYMMDD", timestamp())
+  white_space = var.white_space
   region = var.region
-  # Creating script to execute the playbooks
-  playbooks_script_content = <<EOT
+
+  # Creating commands sequence to execute the playbooks
+  playbook_command_sequences = <<EOT
 %{~for i, playbook in local.to_execute_playbooks~}
-
-ANSIBLE_HOST_KEY_CHECKING=${local.local_provider_host_key_check} \
-ansible-playbook -i ${local.ansible_inventory_path}/host \ 
-${local.ansible_playbooks_path}/${playbook}.yml
-
-%{~if i < length(local.to_execute_playbooks) - 1} && %{endif~}
-
+ANSIBLE_HOST_KEY_CHECKING=${local.local_provider_host_key_check~}
+${local.white_space}ansible-playbook -i ${local.ansible_inventory_path}/host${local.white_space~}
+${local.ansible_playbooks_path}/${playbook}.yml${local.white_space~} 
+%{if i < length(local.to_execute_playbooks) - 1}&&${local.white_space}%{endif}
 %{~endfor~}
 EOT
-
 }
 
 output "playbooks_script" {
-  value = local.playbooks_script_content
+  value =local.playbook_command_sequences
 }
 
 provider "aws" {
@@ -47,7 +44,7 @@ resource "aws_instance" "ec2_instance" {
 
   # # Execute ansible-playbooks 
   provisioner "local-exec" {
-    command = local.playbooks_script_content
+    command = local.playbook_command_sequences
   }
 
 }
