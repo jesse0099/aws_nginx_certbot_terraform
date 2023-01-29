@@ -10,7 +10,7 @@
 - compose_files_paths:
     # Compose local files (Relative paths are allowed)
     local_files_path: '~/BambooRepos/ssm_seguridad-guard-patrol-web-app'
-    # Uploaded local files home (Provide absolute paths)
+    # Uploaded local files to home (Provide absolute paths)
     remote_files_path: '/home/{{ assumed_user }}'
 
 

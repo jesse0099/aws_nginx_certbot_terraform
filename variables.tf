@@ -36,6 +36,12 @@ variable "region" {
   description = "aws region to allocate the ec2 instance"
 }
 
+variable "local_provider_shebang" {
+  type        = string
+  default     = "#!/usr/bin/env bash"
+  description = "Shebang to use on local provider scripts"
+}
+
 variable "to_execute_playbooks" {
   type        = map(bool)
   default     = {}
@@ -46,4 +52,3 @@ variable "to_execute_playbooks" {
                       value: bool to choose if execute the playbook or not.
                   EOT 
 }
-
