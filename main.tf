@@ -8,8 +8,8 @@ locals {
   local_provider_host_key_check = var.local_provider_host_key_check
   ansible_playbooks_path        = var.ansible_playbooks_path
   ansible_inventory_path        = var.ansible_inventory_path
-  white_space = var.white_space
-  region = var.region
+  white_space                   = var.white_space
+  region                        = var.region
 
   # Creating commands sequence to execute the playbooks
   playbook_command_sequences = <<EOT
@@ -23,7 +23,7 @@ EOT
 }
 
 output "playbooks_script" {
-  value =local.playbook_command_sequences
+  value = local.playbook_command_sequences
 }
 
 provider "aws" {
