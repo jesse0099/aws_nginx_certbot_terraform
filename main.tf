@@ -6,18 +6,17 @@ locals {
   ec2_instance_tags      = var.ec2_instance_tags
   to_execute_playbooks   = var.to_execute_playbooks
   local_provider_shebang = var.local_provider_shebang
-  playbooks_script       = <<EOT 
-${local_provider_shebang}\n
-%{~for playbook, execute_it in local.to_execute_playbooks~}
-${playbook}
-%{~endfor~}
-  EOT
   # timestamp     = formatdate("YYYYMMDD", timestamp())
   region = var.region
 }
 
 output "playbooks_script" {
-  value = local.playbooks_script
+  value = <<EOT
+${local.local_provider_shebang}\n
+%{~for playbook, execute_it in local.to_execute_playbooks~}
+${playbook}
+%{~endfor~}
+EOT
 }
 
 provider "aws" {
