@@ -10,14 +10,15 @@ locals {
   ansible_inventory_path        = var.ansible_inventory_path
   white_space                   = var.white_space
   region                        = var.region
+  yml_extension                 = var.yml_extension
 
   # Creating commands sequence to execute the playbooks
   playbook_command_sequences = <<EOT
 %{~for i, playbook in local.to_execute_playbooks~}
 ANSIBLE_HOST_KEY_CHECKING=${local.local_provider_host_key_check~}
 ${local.white_space}ansible-playbook -i ${local.ansible_inventory_path}/host${local.white_space~}
-${local.ansible_playbooks_path}/${playbook}.yml${local.white_space~} 
-%{if i < length(local.to_execute_playbooks) - 1}&&${local.white_space}%{endif}
+${local.ansible_playbooks_path}/${playbook}.${local.yml_extension~} 
+%{if i < length(local.to_execute_playbooks) - 1} && %{endif}
 %{~endfor~}
 EOT
 }

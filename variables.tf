@@ -60,6 +60,12 @@ variable "white_space" {
   description = "white space."
 }
 
+variable "yml_extension" {
+  type        = string
+  default     = "yml"
+  description = "yml extension."
+}
+
 
 variable "to_execute_playbooks" {
   type        = list(string)
