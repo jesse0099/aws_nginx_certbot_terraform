@@ -7,6 +7,8 @@
 
 - nginx_sites_enabled_folder_name: 'sites-enabled'
 
+- apt-transport-https: true
+
 - compose_files_paths:
     # Compose local files (Relative paths are allowed)
     local_files_path: '~/BambooRepos/ssm_seguridad-guard-patrol-web-app'
@@ -44,13 +46,13 @@
     # - 'deb https://download.docker.com/linux/ubuntu focal stable'
 
 - apt_packages_names:
-    - 'tailscale'
     # - 'nginx'
     # - 'software-properties-common'
     # - 'certbot'
     # - 'python3-certbot-nginx'
 
 - forced_apt_get_packages_names:
+    - 'tailscale'
     # - 'ca-certificates'
     # - 'curl'
     # - 'gnupg'
