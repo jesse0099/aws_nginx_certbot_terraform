@@ -13,7 +13,7 @@
     apt: 
      force_apt_get: true
      name: 'apt-transport-https' 
-    when: apt-transport-https
+    when: apt_transport_https
 
   - name: 'Update and Upgrade apt packages.'
     apt: update_cache=yes upgrade=yes cache_valid_time=3600
