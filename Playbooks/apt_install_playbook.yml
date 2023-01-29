@@ -9,12 +9,6 @@
     ansible_ssh_private_key_file: '{{ instance_ssh_key_path }}'
   tasks:
 
-  - name: 'Install apt-transport-https'
-    apt: 
-     force_apt_get: true
-     name: 'apt-transport-https' 
-    when: apt_transport_https
-
   - name: 'Update and Upgrade apt packages.'
     apt: update_cache=yes upgrade=yes cache_valid_time=3600
     when: apt_packages_names
