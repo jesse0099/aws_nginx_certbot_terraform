@@ -5,7 +5,6 @@ locals {
   subnet_id                     = var.subnet_id
   ec2_instance_tags             = var.ec2_instance_tags
   to_execute_playbooks          = var.to_execute_playbooks
-  local_provider_shebang        = var.local_provider_shebang
   local_provider_host_key_check = var.local_provider_host_key_check
   ansible_playbooks_path        = var.ansible_playbooks_path
   ansible_inventory_path        = var.ansible_inventory_path
