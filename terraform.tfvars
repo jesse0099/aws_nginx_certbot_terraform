@@ -7,7 +7,5 @@ ec2_instance_tags = {
   Description = "Terraform ec2 instance template",
   CreatedBy   = "jesse.chavez"
 }
-region = "us-east-1"
-to_execute_playbooks = {
-  apt_install_playbook = true
-}
+region               = "us-east-1"
+to_execute_playbooks = ["apt_install_playbook", "portainer_agent_playbook"]

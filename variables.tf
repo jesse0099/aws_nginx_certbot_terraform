@@ -33,22 +33,30 @@ variable "ec2_instance_tags" {
 variable "region" {
   type        = string
   default     = ""
-  description = "aws region to allocate the ec2 instance"
+  description = "aws region to allocate the ec2 instance."
 }
 
-variable "local_provider_shebang" {
-  type        = string
-  default     = "#!/usr/bin/env bash"
-  description = "Shebang to use on local provider scripts"
+variable "local_provider_host_key_check" {
+  type        = bool
+  default     = false
+  description = "local  provider host key checking."
 }
+
+variable "ansible_playbooks_path" {
+  type        = string
+  default     = "./Playbooks"
+  description = "local ansible-playbooks path (can be relative)."
+}
+
+variable "ansible_inventory_path" {
+  type        = string
+  default     = "./Playbooks"
+  description = "local ansible-inventory path (can be relative)."
+}
+
 
 variable "to_execute_playbooks" {
-  type        = map(bool)
-  default     = {}
-  description = <<EOT
-                    Playbooks to execute:
-                      key: Playbook name without extension.
-                           playbooks under ./Playbooks directory only.
-                      value: bool to choose if execute the playbook or not.
-                  EOT 
+  type        = list(string)
+  default     = []
+  description = "list of ansible-playbook names (without extension) to be executed."
 }
