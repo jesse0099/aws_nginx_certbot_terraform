@@ -32,27 +32,30 @@
       certbot_email: 'jesechavez009@gmail.com'
 
 - apt_signing_keys:
-    - 'http://nginx.org/keys/nginx_signing.key'
-    - 'https://download.docker.com/linux/ubuntu/gpg'
+    - 'https://pkgs.tailscale.com/stable/ubuntu/focal.noarmor.gpg'
+    # - 'http://nginx.org/keys/nginx_signing.key'
+    # - 'https://download.docker.com/linux/ubuntu/gpg'
 
 - apt_repositories:
-    - 'deb-src http://nginx.org/packages/ubuntu/ xenial nginx'
-    - 'deb http://nginx.org/packages/ubuntu/ xenial nginx'
-    - 'ppa:certbot/certbot'
-    - 'deb https://download.docker.com/linux/ubuntu focal stable'
+    - 'https://pkgs.tailscale.com/stable/ubuntu/focal.tailscale-keyring.list'
+    # - 'deb-src http://nginx.org/packages/ubuntu/ xenial nginx'
+    # - 'deb http://nginx.org/packages/ubuntu/ xenial nginx'
+    # - 'ppa:certbot/certbot'
+    # - 'deb https://download.docker.com/linux/ubuntu focal stable'
 
 - apt_packages_names:
-    - 'nginx'
-    - 'software-properties-common'
-    - 'certbot'
-    - 'python3-certbot-nginx'
+    - 'tailscale'
+    # - 'nginx'
+    # - 'software-properties-common'
+    # - 'certbot'
+    # - 'python3-certbot-nginx'
 
 - forced_apt_get_packages_names:
-    - 'ca-certificates'
-    - 'curl'
-    - 'gnupg'
-    - 'lsb-release'
-    - 'docker-ce'
-    - 'docker-ce-cli'
-    - 'containerd.io'
-    - 'docker-compose-plugin'
+    # - 'ca-certificates'
+    # - 'curl'
+    # - 'gnupg'
+    # - 'lsb-release'
+    # - 'docker-ce'
+    # - 'docker-ce-cli'
+    # - 'containerd.io'
+    # - 'docker-compose-plugin'
