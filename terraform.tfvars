@@ -8,4 +8,4 @@ ec2_instance_tags = {
   CreatedBy   = "jesse.chavez"
 }
 region               = "us-east-1"
-to_execute_playbooks = ["apt_install_playbook", "portainer_agent_playbook"]
+to_execute_playbooks = ["apt_install_playbook"]
