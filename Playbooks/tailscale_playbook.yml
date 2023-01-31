@@ -53,7 +53,7 @@
       
       - name: 'Firewalld present.'
         shell: firewall-cmd --permanent --add-masquerade
-        when: firewalld_check
+        when: firewalld_check.stderr is false
 
   - name: 'Adding --advertise-exit-node flag.'
     set_fact:
