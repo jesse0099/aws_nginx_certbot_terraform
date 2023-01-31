@@ -61,12 +61,12 @@
 
   - name: 'Adding --advertise-exit-node flag.'
     set_fact:
-      tail_flags: '{{ tail_flags + "--advertise-exit-node" }}'
+      tail_flags: '{{ tail_flags + ["--advertise-exit-node"] }}'
     when: tailscale_config.advertise_exit_node
 
   - name: 'Adding --advertise-routes flag.'
     set_fact:
-      tail_flags: '{{ tail_flags + ("--advertise-routes=" + routes) }}'
+      tail_flags: '{{ tail_flags + [("--advertise-routes=" + routes)] }}'
     when: tailscale_config.relay.cidr_blocks
 
   - name: 'Tailscale Up.'
