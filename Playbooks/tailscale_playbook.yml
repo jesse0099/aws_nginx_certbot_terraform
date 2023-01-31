@@ -62,7 +62,7 @@
   - name: 'Adding --advertise-exit-node flag.'
     set_fact:
       tail_flags: '{{ tail_flags + "--advertise-exit-node" }}'
-    when: advertise_exit_node
+    when: tailscale_config.advertise_exit_node
 
   - name: 'Adding --advertise-routes flag.'
     set_fact:
