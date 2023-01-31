@@ -23,13 +23,17 @@
       path: /etc/sysctl.d
     register: sysctl_check
 
-  - name: 'Check for Firewalld. (Debian Linux family)'
-    ansible.builtin.package: 
-      name: firewalld
-      state: present
-    check_mode: true
-    register: firewalld_check
-    when: ansible_facts['os_family'] == 'Debian'
+  - name: "Check for installed packages."
+    package_facts:
+      manager: "auto"
+
+  # - name: 'Check for Firewalld. (Debian Linux family)'
+  #   ansible.builtin.package: 
+  #     name: firewalld
+  #     state: present
+  #   check_mode: true
+  #   register: firewalld_check
+  #   when: ansible_facts['os_family'] == 'Debian'
 
   - name: 'Enable IP forwarding.'
     block: 
@@ -53,7 +57,7 @@
       
       - name: 'Firewalld present.'
         shell: firewall-cmd --permanent --add-masquerade
-        when: firewalld_check is succeeded
+        when: "'firewalld' in ansible_facts.packages"
 
   - name: 'Adding --advertise-exit-node flag.'
     set_fact:

@@ -40,7 +40,7 @@ resource "aws_instance" "ec2_instance" {
 
   # # Get assigned public IP to set an Ansible inventory
   provisioner "local-exec" {
-    command = "echo '[server]\n ${self.public_ip} \n' > ${local.ansible_inventory_path}/host"
+    command = "sleep 4 && echo '[server]\n ${self.public_ip} \n' > ${local.ansible_inventory_path}/host"
   }
 
   # # Execute ansible-playbooks 
