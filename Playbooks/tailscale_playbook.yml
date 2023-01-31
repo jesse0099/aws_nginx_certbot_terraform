@@ -49,11 +49,11 @@
           echo 'net.ipv6.conf.all.forwarding = 1' |
           tee -a /etc/sysctl.conf &&
           sysctl -p /etc/sysctl.conf
-        when: sysctl_check not defined
+        when: sysctl_check is not defined
       
       - name: 'Firewalld present.'
         shell: firewall-cmd --permanent --add-masquerade
-        when: firewalld_check not failed
+        when: firewalld_check is not failed
 
   - name: 'Adding --advertise-exit-node flag.'
     set_fact:
