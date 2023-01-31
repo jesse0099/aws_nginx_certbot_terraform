@@ -69,6 +69,11 @@
       tail_flags: '{{ tail_flags + [("--advertise-routes=" + routes)] }}'
     when: tailscale_config.relay.cidr_blocks
 
+  - name: 'Collected flags'
+    debug:
+      msg: 
+        "{{ tail_flags | join(' ') }}"
+
   - name: 'Tailscale Up.'
     shell: >
       tailscale up {{ tail_flags | join(' ') }}
