@@ -1,4 +1,5 @@
 ---
+# EC2 instance configuration
 - assumed_user: 'ubuntu'
 
 - instance_ssh_key_path: '~/GreenKeys/chris_temp.pem'
@@ -7,13 +8,14 @@
 
 - nginx_sites_enabled_folder_name: 'sites-enabled'
 
+# Compose files configuration
 - compose_files_paths:
     # Compose local files (Relative paths are allowed)
     local_files_path: '~/BambooRepos/ssm_seguridad-guard-patrol-web-app'
     # Uploaded local files to home (Provide absolute paths)
     remote_files_path: '/home/{{ assumed_user }}'
 
-
+# Portainer configuration
 - portainer_config:
     image_name_tag: 'portainer/agent:2.16.2'
     container_name: 'portainer_agent'
@@ -21,6 +23,7 @@
     internal_port: 9001
     exposing_port: 9001
 
+# NGINX domains configuration (nginx_virtual_hosts_playbook)
 - nginx_domains_config: 
     devops-test-admin.getbuyside.com:
       listen_port: 80
@@ -31,6 +34,7 @@
       proxy_pass: 'http://localhost:8081'
       certbot_email: 'jesechavez009@gmail.com'
 
+# APT installer configuration
 - apt_signing_keys:
     - 'https://pkgs.tailscale.com/stable/ubuntu/focal.noarmor.gpg'
     # - 'http://nginx.org/keys/nginx_signing.key'
@@ -59,3 +63,12 @@
     # - 'docker-ce-cli'
     # - 'containerd.io'
     # - 'docker-compose-plugin'
+
+# Tailscale configuration
+- tailscale_config:
+    auth_key: ''
+    accept_routes: false
+    relay:
+      cidr_blocks:
+        - '10.1.0.0/16'
+    advertise_exit_node: false
