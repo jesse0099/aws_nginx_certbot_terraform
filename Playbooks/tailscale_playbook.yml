@@ -24,7 +24,10 @@
     register: sysctl_check
 
   - name: 'Check for Firewalld. (Debian Linux family)'
-    command: dpkg-query -l firewalld
+    ansible.builtin.package: 
+      name: firewalld
+      state: present
+    check_mode: true
     register: firewalld_check
     when: ansible_facts['os_family'] == 'Debian'
 
@@ -46,11 +49,11 @@
           echo 'net.ipv6.conf.all.forwarding = 1' |
           tee -a /etc/sysctl.conf &&
           sysctl -p /etc/sysctl.conf
-        when: sysctl_check is not defined
+        when: sysctl_check not defined
       
       - name: 'Firewalld present.'
         shell: firewall-cmd --permanent --add-masquerade
-        when: firewalld_check is succeded
+        when: firewalld_check not failed
 
   - name: 'Adding --advertise-exit-node flag.'
     set_fact:
