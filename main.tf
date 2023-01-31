@@ -15,7 +15,7 @@ locals {
   # Creating commands sequence to execute the playbooks
   playbook_command_sequences = <<EOT
 %{~for i, playbook in local.to_execute_playbooks~}
-ANSIBLE_HOST_KEY_CHECKING=${local.local_provider_host_key_check~}
+sleep 4 && ANSIBLE_HOST_KEY_CHECKING=${local.local_provider_host_key_check~}
 ${local.white_space}ansible-playbook -i ${local.ansible_inventory_path}/host${local.white_space~}
 ${local.ansible_playbooks_path}/${playbook}.${local.yml_extension~} 
 %{if i < length(local.to_execute_playbooks) - 1} && %{endif}
