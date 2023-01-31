@@ -45,7 +45,7 @@ resource "aws_instance" "ec2_instance" {
 
   # # Execute ansible-playbooks 
   provisioner "local-exec" {
-    command = local.playbook_command_sequences
+    command = "${local.playbook_command_sequences != "" ? "${local.playbook_command_sequences}" : "echo 'No playbooks selected.'"}"
   }
 
 }
