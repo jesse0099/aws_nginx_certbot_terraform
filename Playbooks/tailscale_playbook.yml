@@ -69,6 +69,11 @@
       tail_flags: '{{ tail_flags + [("--advertise-routes=" + routes)] }}'
     when: tailscale_config.relay.cidr_blocks
 
+  - name: 'Adding --reset flag.'
+    set_fact:
+      tail_flags: '{{ tail_flags + ["--reset"] }}'
+    when: tailscale_config.force_reset
+
   - name: 'Collected flags'
     debug:
       msg: 
@@ -76,4 +81,4 @@
 
   - name: 'Tailscale Up.'
     shell: >
-      tailscale up {{ tail_flags | join(' ') }}
+      tailscale up --authkey {{ tailscale_config.auth_key }} {{ tail_flags | join(' ') }}
