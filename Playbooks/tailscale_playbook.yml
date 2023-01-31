@@ -1,0 +1,67 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  remote_user: ubuntu
+  vars_files:
+    - ./variables.yml
+  vars: 
+    ansible_ssh_private_key_file: '{{ instance_ssh_key_path }}'
+  tasks:
+
+  - name: 'Create flags list fact.'
+    set_fact:
+      tail_flags: []
+
+  - name: 'Create advertise routes fact'
+    set_fact:
+      routes: "{{ tailscale_config[relay][cidr_blocks] | join(',') }}"
+    when: tailscale_config[relay][cidr_blocks]
+    
+  - name: 'Get stats of the /etc/sysctl.d dir.'
+    ansible.builtin.stat:
+      path: /etc/sysctl.d
+    register: sysctl_check
+
+  - name: 'Check for Firewalld. (Debian Linux family)'
+    command: dpkg-query -l firewalld
+    register: firewalld_check
+    when: ansible_facts['os_family'] == 'Debian'
+
+  - name: 'Enable IP forwarding.'
+    block: 
+      - name: 'sysctl.d directory present.' 
+        shell: >
+          echo 'net.ipv4.ip_forward = 1' |
+          tee -a /etc/sysctl.d/99-tailscale.conf &&
+          echo 'net.ipv6.conf.all.forwarding = 1' |
+          tee -a /etc/sysctl.d/99-tailscale.conf &&
+          sysctl -p /etc/sysctl.d/99-tailscale.conf
+        when: sysctl_check is defined
+      
+      - name: 'Not sysctl.d directory present.'
+        shell: >
+          echo 'net.ipv4.ip_forward = 1' |
+          tee -a /etc/sysctl.conf &&
+          echo 'net.ipv6.conf.all.forwarding = 1' |
+          tee -a /etc/sysctl.conf &&
+          sysctl -p /etc/sysctl.conf
+        when: sysctl_check is not defined
+      
+      - name: 'Firewalld present.'
+        shell: firewall-cmd --permanent --add-masquerade
+        when: firewalld_check is succeded
+
+  - name: 'Adding --advertise-exit-node flag.'
+    set_fact:
+      tail_flags: '{{ tail_flags + "--advertise-exit-node" }}'
+    when: advertise_exit_node
+
+  - name: 'Adding --advertise-routes flag.'
+    set_fact:
+      tail_flags: '{{ tail_flags + ("--advertise-routes=" + routes) }}'
+    when: tailscale_config[relay][cidr_blocks]
+
+  - name: 'Tailscale Up.'
+    shell: >
+      tailscale up {{ tail_flags | join(' ') }}
