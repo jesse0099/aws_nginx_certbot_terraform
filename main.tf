@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 locals {
   ami                           = var.ami
   instance_type                 = var.instance_type
@@ -11,6 +13,10 @@ locals {
   white_space                   = var.white_space
   region                        = var.region
   yml_extension                 = var.yml_extension
+  project                       = var.project
+  environment                   = var.environment
+  terraform_location            = var.terraform_location
+  security_group_ids =  var.security_group_ids
 
   # Creating commands sequence to execute the playbooks
   playbook_command_sequences = <<EOT
@@ -29,14 +35,34 @@ output "playbooks_script" {
 
 provider "aws" {
   region = local.region
+
+  default_tags {
+    Project     = local.project
+    Environment = local.environment
+    CostCode    = local.project
+    Terraform   = local.terraform_location
+    Created_by  = data.aws_caller_identity.current.arn
+  }
+}
+
+
+resource "tls_private_key" "private_key" {
+  algorithm   = "RSA"
+  rsa_bits    = 4096
+}
+
+resource "aws_key_pair" "key_pair" {
+  key_name   = "example_key"
+  public_key = tls_private_key.example.public_key_openssh
 }
 
 resource "aws_instance" "ec2_instance" {
   ami           = local.ami
   instance_type = local.instance_type
-  key_name      = local.key_name
+  key_name      = aws_key_pair.key_pair.key_name
   subnet_id     = local.subnet_id
   tags          = local.ec2_instance_tags
+  vpc_security_group_ids = local.security_group_ids
 
   # # Get assigned public IP to set an Ansible inventory
   provisioner "local-exec" {
@@ -45,7 +71,7 @@ resource "aws_instance" "ec2_instance" {
 
   # # Execute ansible-playbooks 
   provisioner "local-exec" {
-    command = "${local.playbook_command_sequences != "" ? "${local.playbook_command_sequences}" : "echo 'No playbooks selected.'"}"
+    command = local.playbook_command_sequences != "" ? "${local.playbook_command_sequences}" : "echo 'No playbooks selected.'"
   }
 
 }

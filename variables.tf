@@ -72,3 +72,30 @@ variable "to_execute_playbooks" {
   default     = []
   description = "list of ansible-playbook names (without extension) to be executed."
 }
+
+variable "security_group_ids" {
+  type        = list(string)
+  default     = ""
+  description = "Instance VPC attached security groups."
+}
+
+
+variable "environment" {
+  type        = string
+  default     = ""
+  description = "Project environment. (dev, test, stage, prod...)"
+}
+
+variable "project" {
+  type        = string
+  default     = ""
+  description = "Project name."
+}
+
+variable "terraform_location" {
+  type        = string
+  default     = ""
+  description = "Terraform project location to use on AWS tagging."
+}
+
+
