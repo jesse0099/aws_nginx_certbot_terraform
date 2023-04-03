@@ -75,7 +75,7 @@ variable "to_execute_playbooks" {
 
 variable "security_group_ids" {
   type        = list(string)
-  default     = ""
+  default     = []
   description = "Instance VPC attached security groups."
 }
 
@@ -98,4 +98,8 @@ variable "terraform_location" {
   description = "Terraform project location to use on AWS tagging."
 }
 
-
+variable "pem_path" {
+  type        = string
+  default     = ""
+  description = "Path to local pem copy."
+}

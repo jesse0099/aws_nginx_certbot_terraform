@@ -1,16 +1,17 @@
 ami           = "ami-0b0ea68c435eb488d"
 instance_type = "t2.micro"
 key_name      = "chris_temp"
-subnet_id     = "subnet-06f4689f155cc7232" #PERCY-INFRA-PUBLIC-US-EAST-1A
+subnet_id     = "subnet-1c7f907b" #Primary VPC
+pem_path      = "./ssh_key.pem"
 
 ec2_instance_tags = {
-    Name = ""
-    Description = "Signals test environment instance."
+  Name        = "signals-backend-prod-ec2"
+  Description = "Signals test environment instance."
 }
 
 security_group_ids = [
-    "sg-08f4e9d8f63b4a0e1", #Tailscale SG for Percy infra
-    "sg-49b70033"  #AllowWebAccess
+  "sg-0465700b6dbe402d5", #Tailscale SG Primary VPC
+  "sg-49b70033"           #AllowWebAccess
 ]
 
 environment        = "prod"
